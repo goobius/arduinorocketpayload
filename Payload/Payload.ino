@@ -1,5 +1,9 @@
 String datestamp ="";
 char bufferg[40];
+/*Code edited by Brandon and Keith
+ * 
+ * 
+ */
 /* Timestamp functions using a DS1307 RTC connected via I2C and Wire lib
 **
 ** Useful for file name
