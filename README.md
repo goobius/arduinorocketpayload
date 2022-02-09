@@ -6,4 +6,4 @@ Lastly, the payload includes a Real Time Clock module to get timestamps for the 
 
 1. Hello
 2. Goodbye
-> Life is short ... code more ~BigB
+> Life is *short* ... code more ~BigB
