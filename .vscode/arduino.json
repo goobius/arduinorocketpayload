@@ -1,0 +1,5 @@
+{
+    "board": "arduino:avr:uno",
+    "port": "COM1",
+    "sketch": "Payload\\Payload.ino"
+}

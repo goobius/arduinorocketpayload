@@ -13,8 +13,8 @@ char bufferg[40];
 ** Created: 2015-06-01 by AxelTB
 ** Last Edit:
 */
-
-#include "RTClib.h"
+#include <Adruino.h>
+#include <RTClib.h>
 #include <MPU9250_WE.h>
 #include <Wire.h>
 #define MPU9250_ADDR 0x69
@@ -197,7 +197,7 @@ void loop() {
   float resultantG = myMPU9250.getResultantG(gValue);
 
   
-  Serial.println(buffer);
+  Serial.println(bufferg);
   Serial.println("Acceleration in g (x,y,z):");
   Serial.print(gValue.x);
   Serial.print("   ");
