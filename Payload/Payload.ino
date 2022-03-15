@@ -1,19 +1,4 @@
-String datestamp ="";
-char bufferg[40];
-/*Code edited by Brandon and Keith
- * Started 02/09/2023Q
- * 
- */
-/* Timestamp functions using a DS1307 RTC connected via I2C and Wire lib
-**
-** Useful for file name
-**    ` SD.open(time.timestamp()+".log", FILE_WRITE) `
-**
-**
-** Created: 2015-06-01 by AxelTB
-** Last Edit:
-*/
-#include <Adruino.h>
+#include <Arduino.h>
 #include <RTClib.h>
 #include <MPU9250_WE.h>
 #include <Wire.h>
@@ -30,13 +15,69 @@ void setup () {
   while (!Serial); // wait for serial port to connect. Needed for native USB
 #endif
 
+  Wire.begin();
+
+  init_RTC();
+  init_MPU();
+  delay(200);
+}
+void loop() {
+ DateTime time = rtc.now();
+  //Date and Time
+ Serial.print(String("DateTime::TIMESTAMP_DATE:\t")+time.timestamp(DateTime::TIMESTAMP_DATE)+"-"+time.timestamp(DateTime::TIMESTAMP_TIME));
+
+ Serial.println("\n");
+ xyzFloat gValue = myMPU9250.getGValues();
+  xyzFloat gyr = myMPU9250.getGyrValues();
+  xyzFloat magValue = myMPU9250.getMagValues();
+  float temp = myMPU9250.getTemperature();
+  float resultantG = myMPU9250.getResultantG(gValue);
+
+  
+  Serial.println("Acceleration in g (x,y,z):");
+  Serial.print(gValue.x);
+  Serial.print("   ");
+  Serial.print(gValue.y);
+  Serial.print("   ");
+  Serial.println(gValue.z);
+  Serial.print("Resultant g: ");
+  Serial.println(resultantG);
+
+  Serial.println("Gyroscope data in degrees/s: ");
+  Serial.print(gyr.x);
+  Serial.print("   ");
+  Serial.print(gyr.y);
+  Serial.print("   ");
+  Serial.println(gyr.z);
+
+  Serial.println("Magnetometer Data in µTesla: ");
+  Serial.print(magValue.x);
+  Serial.print("   ");
+  Serial.print(magValue.y);
+  Serial.print("   ");
+  Serial.println(magValue.z);
+
+  Serial.print("Temperature in °C: ");
+  Serial.println(temp);
+
+  Serial.println("********************************************");
+
+
+ //Delay 5s
+ delay(1000);
+}
+
+
+void init_RTC()
+{
   if (! rtc.begin()) {
     Serial.println("Couldn't find RTC");
     Serial.flush();
     while (1) delay(10);
   }
 
-  if (! rtc.isrunning()) {
+  if (! rtc.isrunning())
+  {
     Serial.println("RTC is NOT running, let's set the time!");
     // When time needs to be set on a new device, or after a power loss, the
     // following line sets the RTC to the date & time this sketch was compiled
@@ -52,8 +93,10 @@ void setup () {
   // This line sets the RTC with an explicit date & time, for example to set
   // January 21, 2014 at 3am you would call:
   rtc.adjust(DateTime(2022,2,4,2,33,0));
+}
 
-Wire.begin();
+void init_MPU()
+{
   if(!myMPU9250.init()){
     Serial.println("MPU9250 does not respond");
   }
@@ -182,51 +225,4 @@ Wire.begin();
    * AK8963_FUSE_ROM_ACC_MODE 
    */
   myMPU9250.setMagOpMode(AK8963_CONT_MODE_100HZ);
-  delay(200);
-}
-void loop() {
- DateTime time = rtc.now();
-  //Date and Time
- Serial.print(String("DateTime::TIMESTAMP_DATE:\t")+time.timestamp(DateTime::TIMESTAMP_DATE)+"-"+time.timestamp(DateTime::TIMESTAMP_TIME));
-
- Serial.println("\n");
- xyzFloat gValue = myMPU9250.getGValues();
-  xyzFloat gyr = myMPU9250.getGyrValues();
-  xyzFloat magValue = myMPU9250.getMagValues();
-  float temp = myMPU9250.getTemperature();
-  float resultantG = myMPU9250.getResultantG(gValue);
-
-  
-  Serial.println(bufferg);
-  Serial.println("Acceleration in g (x,y,z):");
-  Serial.print(gValue.x);
-  Serial.print("   ");
-  Serial.print(gValue.y);
-  Serial.print("   ");
-  Serial.println(gValue.z);
-  Serial.print("Resultant g: ");
-  Serial.println(resultantG);
-
-  Serial.println("Gyroscope data in degrees/s: ");
-  Serial.print(gyr.x);
-  Serial.print("   ");
-  Serial.print(gyr.y);
-  Serial.print("   ");
-  Serial.println(gyr.z);
-
-  Serial.println("Magnetometer Data in µTesla: ");
-  Serial.print(magValue.x);
-  Serial.print("   ");
-  Serial.print(magValue.y);
-  Serial.print("   ");
-  Serial.println(magValue.z);
-
-  Serial.print("Temperature in °C: ");
-  Serial.println(temp);
-
-  Serial.println("********************************************");
-
-
- //Delay 5s
- delay(1000);
 }
